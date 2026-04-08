@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Viz 4 — U.S. Airport Delay Map</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        color:#333;display:flex;flex-direction:column;align-items:center;padding:20px 16px 36px}
+  h2{font-size:16px;font-weight:600;color:#1a1a1a;width:100%;max-width:960px;margin-bottom:4px}
+  .sub{font-size:12px;color:#666;width:100%;max-width:960px;margin-bottom:14px}
+  #map-wrap{width:100%;max-width:960px;border-radius:8px;overflow:hidden;border:1px solid #ddd}
+  svg{display:block;width:100%;background:#eef3f8}
+  .state{fill:#dce8d4;stroke:#b0c4b0;stroke-width:0.7px}
+  .bubble{stroke:#fff;stroke-width:0.6px;cursor:pointer}
+  .bubble:hover{stroke:#222;stroke-width:1.8px}
+  #tip{position:fixed;pointer-events:none;background:rgba(20,20,20,0.9);
+        color:#f0f0f0;padding:10px 14px;border-radius:6px;font-size:12.5px;
+        line-height:1.7;max-width:220px;display:none;z-index:999;
+        border:1px solid #444}
+  #tip .code{font-size:15px;font-weight:700;color:#e8913a;letter-spacing:1px}
+  .leg{display:flex;align-items:flex-start;gap:36px;margin-top:12px;
+        width:100%;max-width:960px}
+  .leg-title{font-size:11px;font-weight:600;color:#555;margin-bottom:4px}
+  canvas{border-radius:3px}
+  .cb-labels{display:flex;justify-content:space-between;width:200px;
+              font-size:10px;color:#777;margin-top:2px}
+  .sz-svg{overflow:visible}
+  .hint{font-size:11px;color:#999;margin-top:8px}
+</style>
+</head>
+<body>
+<h2>U.S. Airport On-Time Performance — Summer 2015</h2>
+<p class="sub">Bubble size = total departures &nbsp;·&nbsp; Color = avg departure delay &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Drag to pan &nbsp;·&nbsp; Hover for details</p>
+<div id="map-wrap"><svg id="map" viewBox="0 0 960 560" preserveAspectRatio="xMidYMid meet"></svg></div>
+<div class="leg">
+  <div>
+    <div class="leg-title">Avg Departure Delay (min)</div>
+    <canvas id="cb" width="200" height="11"></canvas>
+    <div class="cb-labels"><span id="cb-lo"></span><span>0</span><span id="cb-hi"></span></div>
+  </div>
+  <div>
+    <div class="leg-title">Total Departures (sample)</div>
+    <div id="sz-leg"></div>
+  </div>
+</div>
+<p class="hint">Double-click to reset zoom</p>
+<div id="tip"></div>
+<script>
+const AIRPORTS = [{"iata": "ATL", "name": "Hartsfield-Jackson Atlanta International Airport", "city": "Atlanta", "state": "GA", "lat": 33.64044, "lon": -84.42694, "flights": 1191, "avg_delay": 12.42, "top_carrier": "Delta Air Lines Inc."}, {"iata": "BOS", "name": "Gen. Edward Lawrence Logan International Airport", "city": "Boston", "state": "MA", "lat": 42.36435, "lon": -71.00518, "flights": 392, "avg_delay": 13.26, "top_carrier": "JetBlue Airways"}, {"iata": "BWI", "name": "Baltimore-Washington International Airport", "city": "Baltimore", "state": "MD", "lat": 39.1754, "lon": -76.6682, "flights": 297, "avg_delay": 22.19, "top_carrier": "Southwest Airlines Co."}, {"iata": "CLT", "name": "Charlotte Douglas International Airport", "city": "Charlotte", "state": "NC", "lat": 35.21401, "lon": -80.94313, "flights": 308, "avg_delay": 11.03, "top_carrier": "American Airlines Inc."}, {"iata": "DEN", "name": "Denver International Airport", "city": "Denver", "state": "CO", "lat": 39.85841, "lon": -104.667, "flights": 625, "avg_delay": 11.95, "top_carrier": "Southwest Airlines Co."}, {"iata": "DFW", "name": "Dallas/Fort Worth International Airport", "city": "Dallas-Fort Worth", "state": "TX", "lat": 32.89595, "lon": -97.0372, "flights": 831, "avg_delay": 12.51, "top_carrier": "American Airlines Inc."}, {"iata": "DTW", "name": "Detroit Metropolitan Airport", "city": "Detroit", "state": "MI", "lat": 42.21206, "lon": -83.34884, "flights": 367, "avg_delay": 10.96, "top_carrier": "Delta Air Lines Inc."}, {"iata": "EWR", "name": "Newark Liberty International Airport", "city": "Newark", "state": "NJ", "lat": 40.6925, "lon": -74.16866, "flights": 320, "avg_delay": 21.93, "top_carrier": "United Air Lines Inc."}, {"iata": "IAH", "name": "George Bush Intercontinental Airport", "city": "Houston", "state": "TX", "lat": 29.98047, "lon": -95.33972, "flights": 460, "avg_delay": 17.42, "top_carrier": "United Air Lines Inc."}, {"iata": "JFK", "name": "John F. Kennedy International Airport\u00a0(New York International Airport)", "city": "New York", "state": "NY", "lat": 40.63975, "lon": -73.77893, "flights": 299, "avg_delay": 11.11, "top_carrier": "JetBlue Airways"}, {"iata": "LAS", "name": "McCarran International Airport", "city": "Las Vegas", "state": "NV", "lat": 36.08036, "lon": -115.15233, "flights": 441, "avg_delay": 13.32, "top_carrier": "Southwest Airlines Co."}, {"iata": "LAX", "name": "Los Angeles International Airport", "city": "Los Angeles", "state": "CA", "lat": 33.94254, "lon": -118.40807, "flights": 647, "avg_delay": 15.34, "top_carrier": "Skywest Airlines Inc."}, {"iata": "LGA", "name": "LaGuardia Airport (Marine Air Terminal)", "city": "New York", "state": "NY", "lat": 40.77724, "lon": -73.87261, "flights": 299, "avg_delay": 16.11, "top_carrier": "Delta Air Lines Inc."}, {"iata": "MCO", "name": "Orlando International Airport", "city": "Orlando", "state": "FL", "lat": 28.42889, "lon": -81.31603, "flights": 351, "avg_delay": 15.16, "top_carrier": "Southwest Airlines Co."}, {"iata": "MSP", "name": "Minneapolis-Saint Paul International Airport", "city": "Minneapolis", "state": "MN", "lat": 44.88055, "lon": -93.21692, "flights": 459, "avg_delay": 6.0, "top_carrier": "Delta Air Lines Inc."}, {"iata": "ORD", "name": "Chicago O'Hare International Airport", "city": "Chicago", "state": "IL", "lat": 41.9796, "lon": -87.90446, "flights": 947, "avg_delay": 16.09, "top_carrier": "United Air Lines Inc."}, {"iata": "PHX", "name": "Phoenix Sky Harbor International Airport", "city": "Phoenix", "state": "AZ", "lat": 33.43417, "lon": -112.00806, "flights": 464, "avg_delay": 10.28, "top_carrier": "Southwest Airlines Co."}, {"iata": "SEA", "name": "Seattle-Tacoma International Airport", "city": "Seattle", "state": "WA", "lat": 47.44898, "lon": -122.30931, "flights": 440, "avg_delay": 10.05, "top_carrier": "Alaska Airlines Inc."}, {"iata": "SFO", "name": "San Francisco International Airport", "city": "San Francisco", "state": "CA", "lat": 37.619, "lon": -122.37484, "flights": 487, "avg_delay": 11.4, "top_carrier": "United Air Lines Inc."}, {"iata": "SLC", "name": "Salt Lake City International Airport", "city": "Salt Lake City", "state": "UT", "lat": 40.78839, "lon": -111.97777, "flights": 375, "avg_delay": 4.13, "top_carrier": "Skywest Airlines Inc."}];
+const W=960, H=560;
+const svg = d3.select("#map");
+const g   = svg.append("g");
+const proj = d3.geoAlbersUsa().scale(1280).translate([W/2,H/2]);
+const path = d3.geoPath().projection(proj);
+
+const zoom = d3.zoom().scaleExtent([1,10]).on("zoom", ev=>{
+  g.attr("transform", ev.transform);
+  g.selectAll(".bubble").attr("stroke-width", 0.6/ev.transform.k);
+  g.selectAll(".state").attr("stroke-width", 0.7/ev.transform.k);
+});
+svg.call(zoom);
+svg.on("dblclick.zoom", ()=> svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity));
+
+const tip = d3.select("#tip");
+function show(ev,d){
+  const s = d.avg_delay>=0 ? `+${d.avg_delay.toFixed(1)} min late` : `${Math.abs(d.avg_delay).toFixed(1)} min early`;
+  tip.style("display","block").html(
+    `<span class="code">${d.iata}</span><br/>${d.name}<br/>${d.city}, ${d.state}<br/>
+     <strong>Flights:</strong> ${d3.format(",")(d.flights)}<br/>
+     <strong>Avg Delay:</strong> ${s}<br/>
+     <strong>Top Carrier:</strong> ${d.top_carrier||"N/A"}`
+  );
+  move(ev);
+}
+function move(ev){ tip.style("left",(ev.clientX+14)+"px").style("top",(ev.clientY-10)+"px"); }
+function hide(){ tip.style("display","none"); }
+
+const valid = AIRPORTS.filter(d=>proj([d.lon,d.lat])!==null);
+const maxF  = d3.max(valid, d=>d.flights);
+const rScale = d3.scaleSqrt().domain([0,maxF]).range([3,28]);
+const delays = d3.extent(valid, d=>d.avg_delay);
+const cScale = d3.scaleSequential()
+  .domain([delays[0], 35])
+  .interpolator(d3.interpolateRgbBasis(["#5b8abf","#f5f0e8","#e8913a","#c0392b"]));
+
+d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us=>{
+  g.append("g").selectAll("path")
+    .data(topojson.feature(us,us.objects.states).features)
+    .join("path").attr("class","state").attr("d",path);
+  g.append("path")
+    .datum(topojson.mesh(us,us.objects.states,(a,b)=>a!==b))
+    .attr("fill","none").attr("stroke","#b0c4b0").attr("stroke-width","0.7").attr("d",path);
+
+  g.append("g").selectAll("circle")
+    .data([...valid].sort((a,b)=>b.flights-a.flights))
+    .join("circle")
+    .attr("class","bubble")
+    .attr("cx", d=>proj([d.lon,d.lat])[0])
+    .attr("cy", d=>proj([d.lon,d.lat])[1])
+    .attr("r",  d=>rScale(d.flights))
+    .attr("fill", d=>cScale(d.avg_delay))
+    .attr("opacity",0.85)
+    .on("mouseover",show).on("mousemove",move).on("mouseout",hide);
+
+  // Color bar
+  const cv=document.getElementById("cb"), cx=cv.getContext("2d");
+  const gr=cx.createLinearGradient(0,0,200,0);
+  for(let i=0;i<=10;i++){ const t=i/10; gr.addColorStop(t,cScale(delays[0]+t*(35-delays[0]))); }
+  cx.fillStyle=gr; cx.fillRect(0,0,200,11);
+  document.getElementById("cb-lo").textContent=delays[0].toFixed(1)+" min";
+  document.getElementById("cb-hi").textContent="35+ min";
+
+  // Size legend
+  const ticks=[100,300,600];
+  const szSvg=d3.select("#sz-leg").append("svg").attr("class","sz-svg").attr("width",200).attr("height",52);
+  let ox=16;
+  ticks.forEach(v=>{
+    const r=rScale(v*(maxF/1000));
+    szSvg.append("circle").attr("cx",ox+r).attr("cy",28).attr("r",r)
+      .attr("fill","#bbb").attr("stroke","#fff").attr("stroke-width",0.6);
+    szSvg.append("text").attr("x",ox+r).attr("y",28+r+11)
+      .attr("text-anchor","middle").attr("font-size","10px").attr("fill","#777")
+      .text(v+"‰ of max");
+    ox+=r*2+14;
+  });
+});
+</script>
+</body></html>

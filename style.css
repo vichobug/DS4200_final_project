@@ -1,0 +1,434 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   DS4200 Final Project — style.css
+   Dark-theme single-page site
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Variables ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:       #0f0f1a;
+  --surface:  #16162a;
+  --border:   #2a2a3a;
+  --text:     #e0e0e0;
+  --heading:  #ffffff;
+  --muted:    #888888;
+  --accent:   #e8913a;
+  --max-w:    1000px;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────────── */
+.page {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+header {
+  padding: 72px 0 48px;
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: 64px;
+}
+
+header h1 {
+  font-family: var(--font-mono);
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+
+header .subtitle {
+  font-size: 0.875rem;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+/* ── Section base ───────────────────────────────────────────────────────────── */
+section {
+  margin-bottom: 72px;
+}
+
+section h2 {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 22px;
+  letter-spacing: 0.02em;
+}
+
+p {
+  max-width: 72ch;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+p + p { margin-top: 14px; }
+
+/* ── Divider ────────────────────────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 56px 0;
+}
+
+/* ── Visualization sections ─────────────────────────────────────────────────── */
+.viz-section {
+  margin-bottom: 96px;
+}
+
+.viz-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.viz-label .num {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.viz-label .sep {
+  color: var(--border);
+  font-size: 1rem;
+}
+
+.viz-name {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+/* iframe wrapper */
+.viz-embed {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  margin-bottom: 20px;
+}
+
+.viz-embed iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  overflow: hidden;
+}
+
+/* D3 inline containers */
+.viz-d3 {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  overflow: hidden;
+  margin-bottom: 20px;
+  min-height: 120px;
+}
+
+/* Takeaway callout */
+.takeaway {
+  border-left: 3px solid var(--accent);
+  padding-left: 18px;
+  margin-top: 4px;
+}
+
+.takeaway p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ── Conclusions ────────────────────────────────────────────────────────────── */
+.conclusion {
+  margin-bottom: 32px;
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+}
+
+.conclusion:hover { border-left-color: var(--accent); }
+
+.conclusion h3 {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+
+.conclusion p { font-size: 0.9rem; }
+
+.future-work {
+  margin-top: 32px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ── References ─────────────────────────────────────────────────────────────── */
+#references .ref-item {
+  margin-bottom: 14px;
+}
+
+#references a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+#references a:hover {
+  text-decoration: underline;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.825rem;
+  color: var(--muted);
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+/* ── D3 shared tooltip ──────────────────────────────────────────────────────── */
+.d3-tip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(12, 12, 22, 0.96);
+  color: #e0e0e0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.72;
+  max-width: 240px;
+  z-index: 9999;
+  border: 1px solid #2a2a3a;
+}
+
+.tip-airport-code {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.tip-date {
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.tip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tip-sw {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* ── Viz 4 — Airport map legend ─────────────────────────────────────────────── */
+.apt-leg-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 12px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: #555;
+  background: #fff;
+}
+
+.apt-leg-title { font-weight: 600; color: #444; }
+.apt-leg-lo, .apt-leg-hi { font-size: 10px; color: #888; }
+.apt-leg-hint { font-size: 10px; color: #aaa; }
+
+/* ── Viz 5 — Dropdown ───────────────────────────────────────────────────────── */
+.v5-controls {
+  padding: 12px 14px 0;
+  background: #fff;
+}
+
+.v5-dd-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.v5-dd-btn {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 210px;
+  font-family: var(--font-body);
+}
+
+.v5-dd-btn:hover { border-color: #888; }
+
+.v5-arr {
+  margin-left: auto;
+  font-size: 9px;
+  color: #aaa;
+}
+
+.v5-dd-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px 0;
+  width: 280px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 200;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.v5-dd-panel.open { display: block; }
+
+.v5-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-size: 12.5px;
+  user-select: none;
+  color: #333;
+}
+
+.v5-dd-item:hover { background: #f5f5f5; }
+
+.v5-dd-item input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+}
+
+.v5-sw {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.v5-dd-actions {
+  display: flex;
+  gap: 8px;
+  padding: 5px 12px 3px;
+}
+
+.v5-dd-actions button {
+  font-size: 11px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-family: var(--font-body);
+}
+
+.v5-divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 5px 0;
+}
+
+/* ── Viz 5 — SVG element styles ─────────────────────────────────────────────── */
+.v5-axis path, .v5-axis line { stroke: #ddd; }
+.v5-axis text { fill: #666; font-size: 11px; }
+.v5-grid line { stroke: #f0f0f0; stroke-dasharray: 3, 3; }
+.v5-grid path { stroke-width: 0; }
+.v5-zero { stroke: #ccc; stroke-dasharray: 4, 3; stroke-width: 1px; fill: none; }
+.v5-hol  { stroke: #e8913a; stroke-dasharray: 5, 4; stroke-width: 1.2px; opacity: 0.6; fill: none; }
+.v5-hol-lbl { font-size: 10px; fill: #e8913a; opacity: 0.7; }
+.v5-line { fill: none; stroke-width: 2px; }
+.v5-hover-line { stroke: #bbb; stroke-width: 1px; pointer-events: none; fill: none; }
+
+/* ── Viz 5 — Legend ─────────────────────────────────────────────────────────── */
+.v5-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 8px 14px 14px;
+  font-size: 12px;
+  color: #555;
+  background: #fff;
+}
+
+.v5-leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.v5-leg-line {
+  width: 22px;
+  height: 2.5px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .page { padding: 0 16px; }
+  header { padding: 48px 0 32px; }
+  header h1 { font-size: 1.25rem; }
+  .viz-embed iframe { height: auto !important; min-height: 380px; }
+  footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
