@@ -28,14 +28,13 @@
   <section id="intro">
     <h2>Introduction</h2>
     <p>
-      We analyzed 2015 U.S. domestic flight data to understand delay patterns during peak summer
-      travel &mdash; the three busiest months for American air travel. Our analysis focuses on three
-      core questions: Which airlines have the worst delay records, and what is driving those delays?
-      When during the day and week are delays most likely to occur? And where, geographically, are
-      delays most concentrated?
+      We analyzed a dataset of U.S. domestic flights in 2015 in an attempt to understand delay patterns during peak 
+      summer travel &mdash; the three busiest months for american air travel. Our analysis will focus on three core
+      questions: Which airlines have the worst delay records, and what is driving said delays? When during the day
+      and week are delays most likely to happen? And where, geographically, are delays most concentrated? 
     </p>
     <p>
-      Delays cost travelers time, money, and productivity. By understanding the underlying structural
+      Delays cost travelers time, money and productivity. By understanding the underlying structural
       patterns &mdash; operational cascades, time-of-day compounding, and geographic hotspots &mdash;
       travelers can make smarter booking decisions. This project demonstrates that a handful of
       structural factors explain the majority of delays, and that awareness of these patterns
@@ -50,17 +49,18 @@
     <h2>Data Description</h2>
     <p>
       Our dataset comes from the Bureau of Transportation Statistics via Kaggle, covering all U.S.
-      domestic flights in 2015. The original dataset spans approximately 5.8&nbsp;million flights
+      domestic flights in 2015. The original dataset is at least 5.8&nbsp;million flights
       across 31 features, 14 airlines, and 322 airports. For this analysis, we filtered to the
       summer months (June&ndash;August), restricted to the 20 busiest origin airports by departure
       count, and sampled approximately 10,000 rows for visualization performance.
     </p>
     <p>
-      Key features include departure and arrival delays (in minutes), five delay-cause breakdowns
+      Key features include departure and arrival delays, five delay-cause breakdowns
       (carrier, weather, NAS, late aircraft, security), flight distance, and scheduled departure
-      time. One limitation of this dataset is the absence of external weather severity indices and
+      time. One limitation of this dataset is the absence of external weather severity and
       airport construction records &mdash; factors that would help disentangle operational delays
-      from environmental ones in geographic comparisons.
+      from environmental ones in geographic comparisons, nevertheless, this dataset allows for meaningful
+      comparison and analysis of flight data. 
     </p>
   </section>
 
@@ -160,10 +160,10 @@
     <div class="viz-d3" id="viz4-container"></div>
     <div class="takeaway">
       <p>
-        Not all major hubs perform equally. High-volume airports like ATL maintain lower average
-        delays than similarly busy hubs like ORD and SFO, suggesting that infrastructure, runway
-        configurations, and local weather patterns matter more than raw traffic volume. Scroll to
-        zoom, drag to pan, and hover any bubble for detailed airport statistics.
+        The main takeaway here is that not all major hubs perform equally. High-volume airports like ATL 
+        maintain lower average delays than similarly busy hubs like ORD and SFO, suggesting that general
+        airport infrastructure, runawy configs, and local weather patterns matter more than raw traffic
+        volume. Scroll to zoom, drag to pan and you can hover over any bubble for detailed stats. 
       </p>
     </div>
   </section>
