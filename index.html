@@ -85,11 +85,14 @@
     </div>
     <div class="takeaway">
       <p>
-        Late aircraft delay is the dominant cause across nearly all airlines &mdash; delays are
-        primarily operational, not weather-driven. Spirit Airlines leads at roughly 26% delayed,
-        nearly 10 percentage points above the fleet-wide average. Top performers like Hawaiian
-        Airlines minimize cascading delays through simpler point-to-point route structures with
-        fewer opportunities for schedule propagation.
+        Spirit Airlines is clearly the worst performer, with over 38% of its flights delayed, 
+        more than double the rate of top performers Delta and Alaska, both at around 15%. The 
+        fleet-wide average is 23%. Late aircraft delay is the primary cause behind nearly every 
+        airline's delays, which shows that delays are mostly operational in nature. One delayed 
+        inbound flight leads to several delayed departures throughout the day. Hawaiian Airlines 
+        is an interesting exception. Its delays come entirely from carrier-controlled causes, with 
+        no late aircraft contribution, since it operates short, contained routes within Hawaii 
+        rather than a connected hub network where delays compound.
       </p>
     </div>
   </section>
@@ -113,11 +116,13 @@
     </div>
     <div class="takeaway">
       <p>
-        Delays compound through the day, peaking in late afternoon and evening (4&ndash;9&nbsp;PM).
-        Flights departing before 8&nbsp;AM consistently show the lowest delays regardless of day of
-        week. Weekday evenings are notably worse than weekends &mdash; likely because higher
-        passenger and freight volume on business travel days accumulates earlier delays that ripple
-        through afternoon and evening banks.
+        Delays accumulate throughout the day, peaking between 6 and 8 PM when average delays exceed 
+        30 minutes on the worst weekday nights. Flights departing before 7 AM consistently have the 
+        fewest delays, averaging under 6 minutes regardless of the day of the week. Weekday evenings 
+        are notably worse than weekend evenings, likely due to the higher volume of passengers and 
+        cargo during the workweek causing a cascade effect through the afternoon and evening. 
+        Saturday and Sunday are the best days to fly, with evening delays significantly lower than 
+        what you would typically see Monday through Thursday.
       </p>
     </div>
   </section>
@@ -141,11 +146,12 @@
     </div>
     <div class="takeaway">
       <p>
-        Flight distance alone is a weak predictor of delay. Both short-haul and long-haul flights
-        cluster near zero delay, but short-haul flights produce more extreme outliers &mdash; likely
-        due to regional carriers operating at smaller airports with less operational resilience.
-        Drag to brush any region of the scatter plot to explore the delay distribution for that
-        specific subset of flights.
+        Flight distance does not have much correlation with delays, as both short and long haul 
+        flights tend to cluster around zero, and a negative median delay indicates that most flights 
+        arrive on time or ahead of schedule. Where outliers do occur, they are distributed fairly evenly 
+        across all distance ranges. Outliers in the short haul segment are likely due to regional carriers 
+        whose operations are more constrained by smaller airports. Drag to brush any region of the scatter 
+        plot to explore the delay distribution for that specific subset of flights.
       </p>
     </div>
   </section>
@@ -160,10 +166,12 @@
     <div class="viz-d3" id="viz4-container"></div>
     <div class="takeaway">
       <p>
-        The main takeaway here is that not all major hubs perform equally. High-volume airports like ATL 
-        maintain lower average delays than similarly busy hubs like ORD and SFO, suggesting that general
-        airport infrastructure, runawy configs, and local weather patterns matter more than raw traffic
-        volume. Scroll to zoom, drag to pan and you can hover over any bubble for detailed stats. 
+        Hub airports vary greatly. Atlanta is the busiest airport in the dataset but not the most delayed, 
+        averaging just 12.4 minutes, which is notably lower than other busy hubs like ORD at 16.1 minutes 
+        and SFO at 11.4 minutes. The two best performing airports are Salt Lake City at just 4 minutes and 
+        Minneapolis at 6 minutes on average. Infrastructure, runway layout, and local weather conditions 
+        appear to be bigger factors in determining delays than passenger traffic volume. Scroll to zoom, 
+        drag to pan, and hover over any bubble for detailed stats.
       </p>
     </div>
   </section>
