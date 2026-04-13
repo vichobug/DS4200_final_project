@@ -149,10 +149,10 @@
     </div>
     <div class="takeaway">
       <p>
-        Flight distance does not have much correlation with delays, as both short and long haul 
-        flights tend to cluster around zero, and a negative median delay indicates that most flights 
+        Flight distance does not have much correlation with delays, this is because short and long haul 
+        flights tend to cluster around zero minutes delayed, and a negative median delay indicates that most flights 
         arrive on time or ahead of schedule. Where outliers do occur, they are distributed fairly evenly 
-        across all distance ranges. Outliers in the short haul segment are likely due to regional carriers 
+        across all distance ranges. Outliers in the short haul segment are probably due to regional carriers 
         whose operations are more constrained by smaller airports. Drag to brush any region of the scatter 
         plot to explore the delay distribution for that specific subset of flights.
       </p>
@@ -169,10 +169,10 @@
     <div class="viz-d3" id="viz4-container"></div>
     <div class="takeaway">
       <p>
-        Hub airports vary greatly. Atlanta is the busiest airport in the dataset but not the most delayed, 
-        averaging just 12.4 minutes, which is notably lower than other busy hubs like ORD at 16.1 minutes 
-        and SFO at 11.4 minutes. The two best performing airports are Salt Lake City at just 4 minutes and 
-        Minneapolis at 6 minutes on average. Infrastructure, runway layout, and local weather conditions 
+        Hub airports can vary greatly. Atlanta is the busiest airport in the entire dataset, yet it isnt 
+        the most delayed, averaging just 12.4 minutes. This is notably lower than other busy hubs like Chicago
+        at 16.1 minutes and SFO at 11.4 minutes. The two best performing airports are Salt Lake City at just 4 minutes
+        and Minneapolis at 6 minutes on average. Infrastructure, runway layout, and local weather conditions 
         appear to be bigger factors in determining delays than passenger traffic volume. Scroll to zoom, 
         drag to pan, and hover over any bubble for detailed stats.
       </p>
@@ -206,27 +206,27 @@
     <h2>Findings &amp; Conclusions</h2>
 
     <div class="conclusion">
-      <h3>01 &mdash; The Domino Effect Is Real</h3>
+      <h3>01: The Domino Effect Is Real</h3>
       <p>
-        Late aircraft delay &mdash; not weather &mdash; is the primary driver of flight delays
-        across virtually all U.S. carriers. Airlines with tighter scheduling and fewer buffer
-        minutes suffer disproportionately: one delayed inbound flight cascades into multiple delayed
-        outbound flights throughout the day, compounding by the evening bank.
+        Late aircraft delay, not weather, is the primary driver of flight delays
+        across virtually all U.S. carriers. Airlines that operate with tight 
+        scheduling and fewer buffer minutes were shown to suffer disproportionately.
+        One delayed flight cascades into multiple delays throughout the day.
       </p>
     </div>
 
     <div class="conclusion">
-      <h3>02 &mdash; Time of Day Matters More Than Day of Week</h3>
+      <h3>02: Time of Day Matters More Than Day of Week</h3>
       <p>
-        Morning departures before 8&nbsp;AM are consistently the safest bet for on-time travel.
-        Delays accumulate through the day as cascading effects build &mdash; a flight delayed at
-        7&nbsp;AM affects the 10&nbsp;AM rotation, which affects the 2&nbsp;PM, and so on.
+        Morning departures before 8AM are consistently the safest bet for on-time travel.
+        Delays accumulate through the day as cascading effects build. A flight delayed at
+        7AM affects the 10AM rotation, which affects the 2PM, and so on.
         This compounding pattern is consistent across all seven days of the week.
       </p>
     </div>
 
     <div class="conclusion">
-      <h3>03 &mdash; Geography Isn&rsquo;t Destiny</h3>
+      <h3>03: Airports are not Everything.</h3>
       <p>
         Some high-traffic hubs manage delays far better than others operating under comparable
         conditions, pointing to operational efficiency as the key differentiator. Hub design,
