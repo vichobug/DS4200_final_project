@@ -147,7 +147,24 @@ heat['hour_label'] = heat['hour'].apply(
     else '12 PM' if h == 12 else f'{h-12} PM'
 )
 
-viz2 = (
+ZOOM_HOURS = list(range(5, 21))   # 5 AM – 8 PM
+heat_zoom  = heat[heat['hour'].isin(ZOOM_HOURS)].copy()
+zoom_max   = heat_zoom['avg_delay'].max()
+
+shared_color = alt.Color('avg_delay:Q', title='Avg Dep. Delay (min)',
+                          scale=alt.Scale(scheme='oranges', domainMin=-3),
+                          legend=alt.Legend(orient='right', gradientLength=180,
+                                            labelFontSize=10, titleFontSize=11))
+
+zoom_color = alt.Color('avg_delay:Q', title='Avg Dep. Delay (min)',
+                        scale=alt.Scale(scheme='oranges', domainMin=-3, domainMax=zoom_max),
+                        legend=alt.Legend(orient='right', gradientLength=180,
+                                          labelFontSize=10, titleFontSize=11))
+
+hour_label_expr = ("datum.value==0?'12 AM':datum.value==12?'12 PM':"
+                   "datum.value<12?datum.value+' AM':(datum.value-12)+' PM'")
+
+full_chart = (
     alt.Chart(heat).mark_rect(stroke='white', strokeWidth=0.4)
     .encode(
         x=alt.X('DOW:O', sort=DOW_ORDER, title='Day of Week',
@@ -155,12 +172,8 @@ viz2 = (
         y=alt.Y('hour:O', sort='descending', title='Hour of Day (Scheduled Departure)',
                 axis=alt.Axis(labelFontSize=10, titleFontSize=12,
                               values=list(range(0, 24, 3)),
-                              labelExpr=("datum.value==0?'12 AM':datum.value==12?'12 PM':"
-                                         "datum.value<12?datum.value+' AM':(datum.value-12)+' PM'"))),
-        color=alt.Color('avg_delay:Q', title='Avg Dep. Delay (min)',
-                        scale=alt.Scale(scheme='oranges', domainMin=-3),
-                        legend=alt.Legend(orient='right', gradientLength=180,
-                                          labelFontSize=10, titleFontSize=11)),
+                              labelExpr=hour_label_expr)),
+        color=shared_color,
         tooltip=[
             alt.Tooltip('DOW:O',        title='Day'),
             alt.Tooltip('hour_label:N', title='Hour'),
@@ -170,10 +183,44 @@ viz2 = (
     )
     .properties(
         title=alt.TitleParams(
+            text='Full Day (All Hours)',
+            fontSize=13, anchor='start'),
+        width=380, height=440)
+)
+
+zoom_chart = (
+    alt.Chart(heat_zoom).mark_rect(stroke='white', strokeWidth=0.4)
+    .encode(
+        x=alt.X('DOW:O', sort=DOW_ORDER, title='Day of Week',
+                axis=alt.Axis(labelFontSize=11, titleFontSize=12, labelAngle=0)),
+        y=alt.Y('hour:O', sort='descending', title='',
+                axis=alt.Axis(labelFontSize=10, titleFontSize=12,
+                              values=ZOOM_HOURS,
+                              labelExpr=hour_label_expr)),
+        color=zoom_color,
+        tooltip=[
+            alt.Tooltip('DOW:O',        title='Day'),
+            alt.Tooltip('hour_label:N', title='Hour'),
+            alt.Tooltip('avg_delay:Q',  title='Avg Delay (min)', format='.1f'),
+            alt.Tooltip('flight_cnt:Q', title='Flights',         format=','),
+        ]
+    )
+    .properties(
+        title=alt.TitleParams(
+            text='Zoom: 5 AM – 8 PM (rescaled)',
+            subtitle='Color scale excludes late-night outliers',
+            fontSize=13, subtitleFontSize=10, anchor='start'),
+        width=380, height=440)
+)
+
+viz2 = (
+    alt.hconcat(full_chart, zoom_chart, spacing=30)
+    .properties(
+        title=alt.TitleParams(
             text='Average Departure Delay by Hour and Day of Week',
             subtitle='Summer 2015  |  Top-20 airports  |  Darker = longer delay  |  Hover for details',
-            fontSize=14, subtitleFontSize=11, anchor='start'),
-        width=460, height=440)
+            fontSize=14, subtitleFontSize=11, anchor='start')
+    )
     .configure(background='white')
     .configure_view(strokeWidth=0)
 )
