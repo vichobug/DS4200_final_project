@@ -55,11 +55,11 @@
       count, and sampled approximately 10,000 rows for visualization performance.
     </p>
     <p>
-      Key features include departure and arrival delays, five delay-cause breakdowns
+      Key features of this dataset are departure and arrival delays, five delay-cause reasons,
       (carrier, weather, NAS, late aircraft, security), flight distance, and scheduled departure
-      time. One limitation of this dataset is the absence of external weather severity and
-      airport construction records &mdash; factors that would help disentangle operational delays
-      from environmental ones in geographic comparisons, nevertheless, this dataset allows for meaningful
+      time. A notable limitation of this dataset is the lack of external weather data and airport
+      maitenence data. These are both factors that would help distinguish operational delays from
+      things like weather which are out of the airline's control. Nevertheless, this dataset allows for meaningful
       comparison and analysis of flight data. An important note is that this dataset only includes flights 
       from 2015, so the patterns observed may not reflect current conditions, especially post-pandemic changes 
       in travel behavior and airline operations, but rather will paint us a picture of the structural dynamics
@@ -85,6 +85,13 @@
         scrolling="no"
         title="Airline On-Time Performance — Stacked Bar Chart">
       </iframe>
+    </div>
+    <div class="delay-legend-note">
+      <span class="dln-cat">Late Aircraft</span><span class="dln-def"> — previous flight arrived late, leaving no time to turn the plane around for its next departure.</span><br>
+      <span class="dln-cat">Carrier</span><span class="dln-def"> — airline-controlled issues such as crew scheduling, maintenance, or aircraft cleaning.</span><br>
+      <span class="dln-cat">NAS</span><span class="dln-def"> — National Airspace System factors like heavy traffic volume, air traffic control, or non-severe weather.</span><br>
+      <span class="dln-cat">Weather</span><span class="dln-def"> — significant meteorological conditions that directly prevented safe departure or arrival.</span><br>
+      <span class="dln-cat">Security</span><span class="dln-def"> — checkpoint evacuation, re-screening, or a breach that caused a gate hold.</span>
     </div>
     <div class="takeaway">
       <p>
@@ -207,20 +214,21 @@
     <div class="conclusion">
       <h3>01: The Domino Effect Is Real</h3>
       <p>
-        Late aircraft delay, not weather, is the primary driver of flight delays
-        across virtually all U.S. carriers. Airlines that operate with tight 
-        scheduling and fewer buffer minutes were shown to suffer disproportionately.
-        One delayed flight cascades into multiple delays throughout the day.
+        The primary driver of flight delays across the board is late aircraft 
+        delay, not weather. Airlines that operate with tight scheduling and 
+        few buffer minutes between flights were shown to have suffered delays
+        disproportionately. One delayed flight in the morning cascades into 
+        multiple throughout the day. 
       </p>
     </div>
 
     <div class="conclusion">
       <h3>02: Time of Day Matters More Than Day of Week</h3>
       <p>
-        Morning departures before 8AM are consistently the safest bet for on-time travel.
-        Delays accumulate through the day as cascading effects build. A flight delayed at
-        7AM affects the 10AM rotation, which affects the 2PM, and so on.
-        This compounding pattern is consistent across all seven days of the week.
+        Morning departures that leave before 8AM are consistently on time. Delays
+        tend to accumulate throughout the day as these cascading effects build. A flight
+        delayed at 7AM will affect the 10AM rotation, which then affects the 2PM, and so on. 
+        This pattern of compounding is consistent across all seven days of the week. 
       </p>
     </div>
 
