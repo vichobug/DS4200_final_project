@@ -24,7 +24,7 @@ SEED        = 42
 TARGET_ROWS = 10_000
 OUT_PATH    = "flights_cleaned.csv"
 
-#  1. Load raw CSVs 
+# load the raw CSVs
 print("Loading raw CSVs…")
 flights  = pd.read_csv("flights.csv",  low_memory=False)
 airlines = pd.read_csv("airlines.csv")
@@ -34,12 +34,12 @@ print(f"  flights  : {len(flights):>10,} rows × {flights.shape[1]} cols")
 print(f"  airlines : {len(airlines):>10,} rows")
 print(f"  airports : {len(airports):>10,} rows")
 
-#    2. Filter to June–August   
+# focus on summer months only
 print("\nFiltering to June–August…")
 df = flights[flights["MONTH"].isin([6, 7, 8])].copy()
 print(f"  After month filter : {len(df):,} rows")
 
-#  3. Top-20 busiest origin airports 
+# narrow to the top 20 busiest origin airports
 print("\nFinding top-20 busiest origin airports…")
 top20 = (
     df["ORIGIN_AIRPORT"]
@@ -52,24 +52,24 @@ print(f"  Top 20: {', '.join(top20)}")
 df = df[df["ORIGIN_AIRPORT"].isin(top20)].copy()
 print(f"  After airport filter : {len(df):,} rows")
 
-#  4. Drop missing ARRIVAL_DELAY 
+# rows without arrival delay info aren't useful here
 print("\nDropping rows with missing ARRIVAL_DELAY…")
 df = df.dropna(subset=["ARRIVAL_DELAY"]).copy()
 print(f"  After dropna : {len(df):,} rows")
 
-#  5. Sample to ~10,000 rows 
+# sample down if needed, using a fixed seed for reproducibility
 if len(df) > TARGET_ROWS:
     print(f"\nSampling to {TARGET_ROWS:,} rows (seed={SEED})…")
     df = df.sample(n=TARGET_ROWS, random_state=SEED).reset_index(drop=True)
 else:
     print(f"\nNo sampling needed ({len(df):,} rows ≤ {TARGET_ROWS:,})")
 
-#  6. Merge airline names 
+# attach full airline names
 print("\nMerging airline names…")
 airline_map = dict(zip(airlines["IATA_CODE"], airlines["AIRLINE"]))
 df["AIRLINE_NAME"] = df["AIRLINE"].map(airline_map)
 
-#  6b. Merge airport lat/lon (origin) 
+# bring in geographic info for origin airports
 print("Merging origin airport metadata…")
 apt = airports[["IATA_CODE", "AIRPORT", "CITY", "STATE",
                 "LATITUDE", "LONGITUDE"]].copy()
@@ -87,7 +87,7 @@ df = df.merge(
     how="left",
 )
 
-#  6c. Merge airport lat/lon (destination) 
+# same for destination airports
 print("Merging destination airport metadata…")
 df = df.merge(
     apt.rename(columns={
@@ -102,14 +102,13 @@ df = df.merge(
     how="left",
 )
 
-#  7. Derived columns 
+# create a few extra columns we'll need for the visualizations
 print("\nAdding derived columns…")
 
 
 df["hour"] = (df["SCHEDULED_DEPARTURE"] // 100).clip(0, 23).astype(int)
 df["delayed"] = (df["ARRIVAL_DELAY"] > 15).astype(int)
 
-# time_of_day
 def _tod(h):
     if 5  <= h <= 11: return "Morning"
     if 12 <= h <= 16: return "Afternoon"
@@ -118,7 +117,7 @@ def _tod(h):
 
 df["time_of_day"] = df["hour"].apply(_tod)
 
-# Actual column names in this dataset:
+# column names as they appear in the raw dataset
 CAUSE_COLS = {
     "AIRLINE_DELAY":       "Carrier",
     "WEATHER_DELAY":       "Weather",
@@ -127,7 +126,7 @@ CAUSE_COLS = {
     "LATE_AIRCRAFT_DELAY": "Late Aircraft",
 }
 
-# Only rows where at least one cause is populated
+# only assign a primary cause for rows that actually have delay cause data
 cause_data = df[list(CAUSE_COLS.keys())].copy()
 has_cause  = cause_data.notna().any(axis=1)
 
@@ -139,7 +138,7 @@ df.loc[has_cause, "primary_delay_cause"] = (
     .map(CAUSE_COLS)
 )
 
-# Keep a tidy set of columns (drop low-value / redundant raw fields)
+# final column selection — keep only what the viz needs, drop the rest
 KEEP = [
     # identifiers
     "YEAR", "MONTH", "DAY", "DAY_OF_WEEK",
@@ -164,14 +163,14 @@ KEEP = [
     "CANCELLED", "DIVERTED", "CANCELLATION_REASON",
 ]
 
-# Only keep columns that actually exist in the dataframe
+# guard against any columns that might be missing
 KEEP = [c for c in KEEP if c in df.columns]
 df_out = df[KEEP].copy()
 
 print(f"\nExporting {len(df_out):,} rows × {df_out.shape[1]} cols → {OUT_PATH}")
 df_out.to_csv(OUT_PATH, index=False)
 
-#  9. Size check 
+# quick sanity check on the output file size
 size_mb = os.path.getsize(OUT_PATH) / 1_048_576
 print(f"\n{'='*50}")
 print(f"  Output file  : {OUT_PATH}")
