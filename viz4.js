@@ -34,7 +34,7 @@
 
   var valid = AIRPORTS.filter(function (d) { return proj([d.lon, d.lat]) !== null; });
   var maxF = d3.max(valid, function (d) { return d.flights; });
-  var rScale = d3.scaleSqrt().domain([0, maxF]).range([3, 26]);
+  var rScale = d3.scaleSqrt().domain([0, maxF]).range([2, 16]);
   var delayExt = d3.extent(valid, function (d) { return d.avg_delay; });
   var cScale = d3.scaleSequential()
     .domain([delayExt[0], 35])
